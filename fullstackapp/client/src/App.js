@@ -14,10 +14,10 @@ export default function App() {
       .catch(error => console.error("Error fetching songs:", error));
   }, []);  
   
-  const mockSongs = [
-    { id: "song1", name: "Song 1", cover: "https://via.placeholder.com/80", url: "#" },
-    { id: "song2", name: "Song 2", cover: "https://via.placeholder.com/80", url: "#" }
-  ];
+  // const mockSongs = [
+  //   { id: "song1", name: "Song 1", cover: "https://via.placeholder.com/80", url: "#" },
+  //   { id: "song2", name: "Song 2", cover: "https://via.placeholder.com/80", url: "#" }
+  // ];
 
   const stickers = [
     { id: "sticker1", image: "https://i.pinimg.com/236x/43/33/6e/43336ef5c93653fc193a71b8de41b3cf.jpg" },
