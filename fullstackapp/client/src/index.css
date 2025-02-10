@@ -165,8 +165,8 @@ button:hover {
   transform: translate(-50%, -50%);
   background: white;
   border: 2px solid #ccc;
-  width: 600px;
-  height: 600px;
+  width: 500px;
+  height: 500px;
   display: grid;
   grid-template-columns: repeat(5, 100px);
   grid-template-rows: repeat(5, 100px);
