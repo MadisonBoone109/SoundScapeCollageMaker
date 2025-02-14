@@ -11,8 +11,13 @@ export default function App() {
   const API_BASE_URL = "/.netlify/functions/deezer"; // Calls Netlify function
 
   useEffect(() => {
-    const genres = ["lofi", "jazz", "rock", "hiphop"]; // Add more genres as needed
-    const requests = genres.map(genre => axios.get(`${API_BASE_URL}?q=${genre}`));
+    const genres = ["jazz", "rock", "hiphop", "pop", "blues", "rnb", ]; // Add more genres as needed
+    const moods = ["chill", "party", "romantic", "focus"]; // Add moods
+    const regional = ["chill", "party", "romantic", "focus"];
+    const queries = [...genres, ...moods, ...regional]; // Combine genres & moods
+    
+
+    const requests = queries.map(query => axios.get(`${API_BASE_URL}?q=${query}`));
 
     Promise.all(requests)
       .then(responses => {
@@ -21,6 +26,7 @@ export default function App() {
       })
       .catch(error => console.error("Error fetching songs:", error));
   }, []);
+
 
   
   // const mockSongs = [
