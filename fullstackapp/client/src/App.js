@@ -8,19 +8,19 @@ export default function App() {
   const [canvasItems, setCanvasItems] = useState([]); // Items on canvas
   const [songs, setSongs] = useState([]); // Songs state
 
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/deezer?q=lofi")
-      .then(response => setSongs(response.data.data))
-      .catch(error => console.error("Error fetching songs:", error));
-  }, []);  
-
   const API_BASE_URL = "/.netlify/functions/deezer"; // Calls Netlify function
 
-useEffect(() => {
-  axios.get(`${API_BASE_URL}?q=lofi`)
-    .then(response => setSongs(response.data.data))
-    .catch(error => console.error("Error fetching songs:", error));
-}, []);
+  useEffect(() => {
+    const genres = ["lofi", "jazz", "rock", "hiphop"]; // Add more genres as needed
+    const requests = genres.map(genre => axios.get(`${API_BASE_URL}?q=${genre}`));
+
+    Promise.all(requests)
+      .then(responses => {
+        const allSongs = responses.flatMap(response => response.data.data);
+        setSongs(allSongs);
+      })
+      .catch(error => console.error("Error fetching songs:", error));
+  }, []);
 
   
   // const mockSongs = [
