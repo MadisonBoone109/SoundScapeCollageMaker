@@ -61,9 +61,15 @@ export default function App() {
   const handleDrop = (e) => {
     e.preventDefault();
     const item = JSON.parse(e.dataTransfer.getData("item"));
-    const gridX = Math.floor(e.nativeEvent.offsetX / 100);
-    const gridY = Math.floor(e.nativeEvent.offsetY / 100);
-    
+  
+    // Get grid size from CSS
+    const gridSize = document.querySelector(".canvas").getBoundingClientRect();
+    const itemSize = gridSize.width / 5; // Assuming 5x5 grid
+  
+    // Get position based on mouse drop location
+    const gridX = Math.floor(e.nativeEvent.offsetX / itemSize);
+    const gridY = Math.floor(e.nativeEvent.offsetY / itemSize);
+  
     setCanvasItems([...canvasItems, { ...item, x: gridX, y: gridY }]);
   };
 
@@ -129,7 +135,7 @@ export default function App() {
         {/* Centered Canvas */}
         <div className="canvas" onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
         {canvasItems.map((item, index) => (
-  <div key={index} className="grid-item" style={{ left: `${item.x * 100}px`, top: `${item.y * 100}px` }}>
+  <div key={index} className="grid-item" style={{ left: `${item.x * 20}%`, top: `${item.y * 20}%` }}>
     <img src={item.album?.cover || item.image || "https://via.placeholder.com/80"} alt={item.title || "Sticker"} />
     {item.preview && (
       <audio controls>
