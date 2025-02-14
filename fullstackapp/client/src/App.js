@@ -13,6 +13,15 @@ export default function App() {
       .then(response => setSongs(response.data.data))
       .catch(error => console.error("Error fetching songs:", error));
   }, []);  
+
+  const API_BASE_URL = "/.netlify/functions/deezer"; // Calls Netlify function
+
+useEffect(() => {
+  axios.get(`${API_BASE_URL}?q=lofi`)
+    .then(response => setSongs(response.data.data))
+    .catch(error => console.error("Error fetching songs:", error));
+}, []);
+
   
   // const mockSongs = [
   //   { id: "song1", name: "Song 1", cover: "https://via.placeholder.com/80", url: "#" },
