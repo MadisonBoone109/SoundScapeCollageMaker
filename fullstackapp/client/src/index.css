@@ -115,6 +115,7 @@ button:hover {
   border-radius: 12px 30px 30px 5px;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevents content from overflowing outside */
 }
 
 .tabs button {
@@ -131,8 +132,22 @@ button:hover {
   background-color: #66deff;
 }
 
+/* Make items scrollable inside sidebar */
 .items {
   margin-top: 20px;
+  overflow-y: auto;  /* Enables vertical scrolling */
+  max-height: 70vh;  /* Ensures it fits within the sidebar */
+  padding-right: 5px; /* Prevents content from touching the scrollbar */
+}
+
+/* Create a grid layout for items */
+.items .draggable {
+  cursor: grab;
+  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  gap: 10px; /* Space between items */
+  padding: 10px;
 }
 
 .draggable {
