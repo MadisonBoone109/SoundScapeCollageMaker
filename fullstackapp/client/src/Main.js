@@ -1,13 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import Signup from "./Signup";
-import Login from "./Login";
+import axios from "axios";
 import "./index.css";
-import Main from "./Main";
 
-export default function App() {
-  // const [screen, setScreen] = useState("home");
+export default function Main() {
   const [tab, setTab] = useState("songs"); // Active tab
   const [canvasItems, setCanvasItems] = useState([]); // Items on canvas
   const [songs, setSongs] = useState([]); // Songs state
@@ -15,11 +10,9 @@ export default function App() {
   const API_BASE_URL = "/.netlify/functions/deezer"; // Calls Netlify function
 
   useEffect(() => {
-    const genres = ["jazz", "rock", "hiphop", "pop", "blues", "rnb", ]; // Add more genres as needed
-    const moods = ["chill", "party", "romantic", "focus"]; // Add moods
-    const regional = ["chill", "party", "romantic", "focus"];
-    const queries = [...genres, ...moods, ...regional]; // Combine genres & moods
-    
+    const genres = ["jazz", "rock", "hiphop", "pop", "blues", "rnb"];
+    const moods = ["chill", "party", "romantic", "focus"];
+    const queries = [...genres, ...moods];
 
     const requests = queries.map(query => axios.get(`${API_BASE_URL}?q=${query}`));
 
@@ -31,9 +24,7 @@ export default function App() {
       .catch(error => console.error("Error fetching songs:", error));
   }, []);
 
-
-  
-  // const mockSongs = [
+    // const mockSongs = [
   //   { id: "song1", name: "Song 1", cover: "https://via.placeholder.com/80", url: "#" },
   //   { id: "song2", name: "Song 2", cover: "https://via.placeholder.com/80", url: "#" }
   // ];
@@ -65,49 +56,64 @@ export default function App() {
   const handleDrop = (e) => {
     e.preventDefault();
     const item = JSON.parse(e.dataTransfer.getData("item"));
-  
-    // Get grid size from CSS
     const gridSize = document.querySelector(".canvas").getBoundingClientRect();
-    const itemSize = gridSize.width / 5; // Assuming 5x5 grid
-  
-    // Get position based on mouse drop location
+    const itemSize = gridSize.width / 5; 
+
     const gridX = Math.floor(e.nativeEvent.offsetX / itemSize);
     const gridY = Math.floor(e.nativeEvent.offsetY / itemSize);
-  
+
     setCanvasItems([...canvasItems, { ...item, x: gridX, y: gridY }]);
   };
 
   return (
-      <Router>
-      <div className="container">
-        {/* Navbar */}
-        <nav className="navbar">
-          <div className="navbar-left">
-            <img src="/RecordOnly192.png" alt="Logo" className="logo-image" />
-            <span className="logo-text">SONISCA</span>
-          </div>
-          <div className="navbar-right">
-            <Link to="/signup"><button>SIGN UP</button></Link>
-            <Link to="/login"><button>SIGN IN</button></Link>
-          </div>
-        </nav>
+    <div className="main">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <div className="tabs">
+          <button onClick={() => setTab("songs")}>Songs</button>
+          <button onClick={() => setTab("stickers")}>Stickers</button>
+          <button onClick={() => setTab("images")}>Images</button>
+        </div>
 
-        {/* Routes */}
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={
-            <>
-              <Main />
-              {/* Footer moved here */}
-              <footer className="footer">
-                <button>About</button>
-                <button>API</button>
-              </footer>
-            </>
-          } />
-        </Routes>
+        <div className="items">
+          {tab === "songs" &&
+            songs.map((song) => (
+              <div key={song.id} className="draggable" draggable onDragStart={(e) => handleDragStart(e, song)}>
+                <img src={song.album?.cover || "https://via.placeholder.com/80"} alt={song.title} />
+                <p>{song.title}</p>
+              </div>
+            ))
+          }
+
+          {tab === "stickers" &&
+            stickers.map((sticker) => (
+              <div key={sticker.id} className="draggable" draggable onDragStart={(e) => handleDragStart(e, sticker)}>
+                <img src={sticker.image} alt="Sticker" />
+              </div>
+            ))}
+
+          {tab === "images" &&
+            images.map((sticker) => (
+              <div key={sticker.id} className="draggable" draggable onDragStart={(e) => handleDragStart(e, sticker)}>
+                <img src={sticker.image} alt="Sticker" />
+              </div>
+            ))}
+        </div>
+      </aside>
+
+      {/* Canvas */}
+      <div className="canvas" onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
+        {canvasItems.map((item, index) => (
+          <div key={index} className="grid-item" style={{ left: `${item.x * 20}%`, top: `${item.y * 20}%` }}>
+            <img src={item.album?.cover || item.image || "https://via.placeholder.com/80"} alt={item.title || "Sticker"} />
+            {item.preview && (
+              <audio controls>
+                <source src={item.preview} type="audio/mp3" />
+              </audio>
+            )}
+          </div>
+        ))}
       </div>
-    </Router>
+    </div>
   );
 }
