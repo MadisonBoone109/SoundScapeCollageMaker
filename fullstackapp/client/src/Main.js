@@ -19,7 +19,13 @@ export default function Main() {
     Promise.all(requests)
       .then(responses => {
         const allSongs = responses.flatMap(response => response.data.data);
-        setSongs(allSongs);
+        const songsWithPreview = allSongs.map(song => ({
+          id: song.id,
+          title: song.title,
+          cover: song.album?.cover || "https://via.placeholder.com/80",
+          preview: song.preview // Ensure preview is being saved
+        }));
+        setSongs(songsWithPreview);
       })
       .catch(error => console.error("Error fetching songs:", error));
   }, []);
@@ -78,8 +84,8 @@ export default function Main() {
         <div className="items">
           {tab === "songs" &&
             songs.map((song) => (
-              <div key={song.id} className="draggable" draggable onDragStart={(e) => handleDragStart(e, song)}>
-                <img src={song.album?.cover || "https://via.placeholder.com/80"} alt={song.title} />
+              <div key={song.id} className="draggable" draggable onDragStart={(e) => handleDragStart(e, { ...song })}>
+                <img src={song.cover} alt={song.title} />
                 <p>{song.title}</p>
               </div>
             ))
@@ -106,10 +112,13 @@ export default function Main() {
         {canvasItems.map((item, index) => (
           <div key={index} className="grid-item" style={{ left: `${item.x * 20}%`, top: `${item.y * 20}%` }}>
             <img src={item.album?.cover || item.image || "https://via.placeholder.com/80"} alt={item.title || "Sticker"} />
-            {item.preview && (
+            {item.preview ? (
               <audio controls>
                 <source src={item.preview} type="audio/mp3" />
+                Your browser does not support the audio tag.
               </audio>
+            ) : (
+              <p>No Preview Available</p>
             )}
           </div>
         ))}
