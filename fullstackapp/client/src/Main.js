@@ -3,11 +3,11 @@ import axios from "axios";
 import "./index.css";
 
 export default function Main() {
-  const [tab, setTab] = useState("songs"); // Active tab
-  const [canvasItems, setCanvasItems] = useState([]); // Items on canvas
-  const [songs, setSongs] = useState([]); // Songs state
+  const [tab, setTab] = useState("songs");
+  const [canvasItems, setCanvasItems] = useState([]);
+  const [songs, setSongs] = useState([]);
 
-  const API_BASE_URL = "/.netlify/functions/deezer"; // Calls Netlify function
+  const API_BASE_URL = "/.netlify/functions/deezer"; 
 
   useEffect(() => {
     const genres = ["jazz", "rock", "hiphop", "pop", "blues", "rnb"];
@@ -23,18 +23,13 @@ export default function Main() {
           id: song.id,
           title: song.title,
           cover: song.album?.cover || "https://via.placeholder.com/80",
-          preview: song.preview, // Ensure preview is being saved
+          preview: song.preview, 
           album: song.album
         }));
         setSongs(songsWithPreview);
       })
       .catch(error => console.error("Error fetching songs:", error));
   }, []);
-
-    // const mockSongs = [
-  //   { id: "song1", name: "Song 1", cover: "https://via.placeholder.com/80", url: "#" },
-  //   { id: "song2", name: "Song 2", cover: "https://via.placeholder.com/80", url: "#" }
-  // ];
 
   const stickers = [
     { id: "sticker1", image: "https://i.pinimg.com/236x/43/33/6e/43336ef5c93653fc193a71b8de41b3cf.jpg" },
